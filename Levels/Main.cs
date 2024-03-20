@@ -9,10 +9,14 @@ public partial class Main : Node2D
 	{
 		if (Multiplayer.IsServer())
 		{
+			Character Host = CharacterScene.Instantiate<Character>();
+			GetNode("Characters").AddChild(Host, true);
+
 			foreach(int id in Multiplayer.GetPeers())
 			{
-				Character cha = CharacterScene.Instantiate<Character>();
-				GetNode("Characters").AddChild(cha);
+				Character Other = CharacterScene.Instantiate<Character>();
+				GetNode("Characters").AddChild(Other, true);
+				Other.SetMultiplayerAuthority(id);
 			}
 		}
 	}
