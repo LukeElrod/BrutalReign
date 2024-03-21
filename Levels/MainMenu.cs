@@ -43,10 +43,13 @@ public partial class MainMenu : Node2D
 
 	private void StartButtonPressed()
 	{
-		Rpc("StartGame");
+		if (Multiplayer.IsServer())
+		{
+			Rpc(nameof(StartGame));
+		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	[Rpc(CallLocal = true)]
 	void StartGame()
 	{
 		GetTree().ChangeSceneToFile("Levels/Main.tscn");

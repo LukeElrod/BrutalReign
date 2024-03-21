@@ -10,18 +10,31 @@ public partial class Main : Node2D
 		if (Multiplayer.IsServer())
 		{
 			Character Host = CharacterScene.Instantiate<Character>();
-			GetNode("Characters").AddChild(Host, true);
+			Host.Name = "Host";
+			GetNode("Characters").AddChild(Host);
 
 			foreach(int id in Multiplayer.GetPeers())
 			{
 				Character Other = CharacterScene.Instantiate<Character>();
-				GetNode("Characters").AddChild(Other, true);
+				Other.Name = "Peer" + id;
+				GetNode("Characters").AddChild(Other);
 				Other.SetMultiplayerAuthority(id);
+				Rpc(nameof(SetVisitorAuthority));
 			}
 		}
 	}
 
-	public override void _Process(double delta)
+	[Rpc]
+	public void SetVisitorAuthority()
 	{
+		Character character = GetNode<Character>("Characters/Peer" + Multiplayer.GetUniqueId());
+		if (character != null)
+		{
+			character.SetMultiplayerAuthority(Multiplayer.GetUniqueId());
+		}
+		else
+		{
+			GD.PrintErr("Character instance not found on client: " + Multiplayer.GetUniqueId());
+		}
 	}
 }
