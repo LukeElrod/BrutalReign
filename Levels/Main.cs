@@ -5,36 +5,34 @@ public partial class Main : Node2D
 {
 	[Export]
 	PackedScene CharacterScene;
-	public override void _Ready()
+	MultiplayerSpawner Spawner;
+	public override async void _Ready()
 	{
+		Spawner = GetNode<MultiplayerSpawner>("MultiplayerSpawner");
+		Spawner.SpawnFunction = Callable.From<Variant, Node>(CharacterSpawnFunc);
 		if (Multiplayer.IsServer())
 		{
-			Character Host = CharacterScene.Instantiate<Character>();
-			Host.Name = "Host";
-			GetNode("Characters").AddChild(Host);
-
+			Spawner.Spawn(1);
 			foreach(int id in Multiplayer.GetPeers())
 			{
-				Character Other = CharacterScene.Instantiate<Character>();
-				Other.Name = "Peer" + id;
-				GetNode("Characters").AddChild(Other);
-				Other.SetMultiplayerAuthority(id);
-				Rpc(nameof(SetVisitorAuthority));
+				Spawner.Spawn(id);
 			}
 		}
 	}
 
-	[Rpc]
-	public void SetVisitorAuthority()
+	Node CharacterSpawnFunc(Variant Data)
 	{
-		Character character = GetNode<Character>("Characters/Peer" + Multiplayer.GetUniqueId());
-		if (character != null)
+		int id = Data.As<int>();
+
+		Character Player = CharacterScene.Instantiate<Character>();
+		Player.SetMultiplayerAuthority(id);
+		if (Multiplayer.IsServer())
 		{
-			character.SetMultiplayerAuthority(Multiplayer.GetUniqueId());
-		}
-		else
+			Player.Name = "Host";
+		}else
 		{
-			GD.PrintErr("Character instance not found on client: " + Multiplayer.GetUniqueId());
+			Player.Name = "Peer" + Multiplayer.GetUniqueId();
 		}
+		return Player;
 	}
 }

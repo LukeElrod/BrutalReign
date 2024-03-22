@@ -4,35 +4,47 @@ using System;
 public partial class Character : CharacterBody2D
 {
 	private const float SPEED = 200.0f;
+    private const float GRAVITY = 800.0f;
+    private const float JUMP_FORCE = 400.0f;
 	public override void _Ready()
 	{
 		if (IsMultiplayerAuthority())
 		{
-			Position = new Vector2(GD.RandRange(0, 500), GD.RandRange(0, 500));
+			if (Multiplayer.IsServer())
+			{
+				// Host spawns on the left side
+				Position = new Vector2(100, 100);
+			}
+			else
+			{
+				// Visitor spawns on the right side
+				Position = new Vector2(GetViewportRect().Size.X - 100, 100);
+			}
 		}
 	}
 
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
-		if (IsMultiplayerAuthority())
-		{
-			Vector2 velocity = Vector2.Zero;
+        if (IsMultiplayerAuthority())
+        {
+            Vector2 NewVelocity = Velocity;
 
-            // Get input direction
+            NewVelocity.Y += GRAVITY * (float)delta;
+
+            Vector2 InputVec = Vector2.Zero;
             if (Input.IsActionPressed("MoveLeft"))
-                velocity.X -= 1;
+                InputVec.X -= 1;
             if (Input.IsActionPressed("MoveRight"))
-                velocity.X += 1;
-            if (Input.IsActionPressed("MoveUp"))
-                velocity.Y -= 1;
-            if (Input.IsActionPressed("MoveDown"))
-                velocity.Y += 1;
+                InputVec.X += 1;
 
-            // Normalize velocity to prevent faster diagonal movement
-            velocity = velocity.Normalized();
+            NewVelocity.X = InputVec.X * SPEED;
 
-            // Apply movement
-            Velocity = velocity * SPEED;
+            if (IsOnFloor() && Input.IsActionJustPressed("Jump"))
+            {
+                NewVelocity.Y = -JUMP_FORCE;
+            }
+
+            Velocity = NewVelocity;
             MoveAndSlide();
 		}
 	}
