@@ -6,7 +6,7 @@ public partial class Main : Node2D
 	[Export]
 	PackedScene CharacterScene;
 	MultiplayerSpawner Spawner;
-	public override async void _Ready()
+	public override void _Ready()
 	{
 		Spawner = GetNode<MultiplayerSpawner>("MultiplayerSpawner");
 		Spawner.SpawnFunction = Callable.From<Variant, Node>(CharacterSpawnFunc);
@@ -26,13 +26,7 @@ public partial class Main : Node2D
 
 		Character Player = CharacterScene.Instantiate<Character>();
 		Player.SetMultiplayerAuthority(id);
-		if (Multiplayer.IsServer())
-		{
-			Player.Name = "Host";
-		}else
-		{
-			Player.Name = "Peer" + Multiplayer.GetUniqueId();
-		}
+		Player.Name = "Peer" + Multiplayer.GetUniqueId();
 		return Player;
 	}
 }

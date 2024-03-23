@@ -4,12 +4,14 @@ using System;
 public partial class MainMenu : Node2D
 {
 
-	Button ClientButton;
-	Button ServerButton;
-	Button StartButton;
+	private Button ClientButton;
+	private Button ServerButton;
+	private Button StartButton;
+	private TextEdit IpTextEdit;
 
 	public override void _Ready()
 	{
+		IpTextEdit = GetNode<TextEdit>("TextEdit");
 		ClientButton = GetNode<Button>("ClientButton");
 		ServerButton = GetNode<Button>("ServerButton");
 		StartButton = GetNode<Button>("StartButton");
@@ -26,7 +28,7 @@ public partial class MainMenu : Node2D
 	private void ClientButtonPressed()
 	{
 		var Peer = new ENetMultiplayerPeer();
-		Peer.CreateClient("127.0.0.1", 8080);
+		Peer.CreateClient(IpTextEdit.Text, 8080);
 		Multiplayer.MultiplayerPeer = Peer;
 
 		GD.Print("client");

@@ -25,3 +25,9 @@ offset_top = 428.0
 offset_right = 604.0
 offset_bottom = 488.0
 text = "start"
+
+[node name="TextEdit" type="TextEdit" parent="."]
+offset_left = 160.0
+offset_top = 224.0
+offset_right = 388.0
+offset_bottom = 265.0
