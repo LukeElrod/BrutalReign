@@ -28,7 +28,7 @@ public partial class MainMenu : Node2D
 	private void ClientButtonPressed()
 	{
 		var Peer = new ENetMultiplayerPeer();
-		Peer.CreateClient(IpTextEdit.Text, 8080);
+		Peer.CreateClient(IpTextEdit.Text, 7777);
 		Multiplayer.MultiplayerPeer = Peer;
 
 		GD.Print("client");
@@ -37,7 +37,7 @@ public partial class MainMenu : Node2D
 	private void ServerButtonPressed()
 	{
 		var Peer = new ENetMultiplayerPeer();
-		Peer.CreateServer(8080);
+		Peer.CreateServer(7777);
 		Multiplayer.MultiplayerPeer = Peer;
 
 		GD.Print("server");

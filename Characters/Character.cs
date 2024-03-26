@@ -10,6 +10,8 @@ public partial class Character : CharacterBody2D
 	private const float SPEED = 200.0f;
     private const float GRAVITY = 800.0f;
     private const float JUMP_FORCE = 400.0f;
+	private double PositionUpdate = 0.0;
+
 	public override void _Ready()
 	{
 		AnimPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
@@ -33,43 +35,19 @@ public partial class Character : CharacterBody2D
 		}
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void Kill()
-	{
-		if (Multiplayer.IsServer())
+    public override void _Process(double delta)
+    {
+        if (IsMultiplayerAuthority())
 		{
-			Position = new Vector2(100, 100);
-		}else
-		{
-			Position = new Vector2(GetViewportRect().Size.X - 100, 100);
+			//sync pos every 0.05 seconds
+			PositionUpdate += delta;
+			if (PositionUpdate >= 0.05)
+			{
+				Rpc(nameof(NotifyPeersPos), Position);
+				PositionUpdate = 0.0;
+			}
 		}
-	}
-
-	private void OnAnimFinished(StringName Anim)
-	{
-		if (Anim == "Attack")
-		{
-			bIsAttacking = false;
-		}
-	}
-
-	private void OnAnimationStarted(StringName Anim)
-	{
-		Rpc(nameof(NotifyPeersAnim), Anim);
-	}
-
-	[Rpc]
-	private void NotifyPeersAnim(StringName Anim)
-	{
-		AnimPlayer.Play(Anim);
-	}
-
-	[Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered, TransferChannel = 1)]
-	private void NotifyPeersPos(Vector2 NewPos)
-	{
-		Position = NewPos;
-	}
-
+    }
 	public override void _PhysicsProcess(double delta)
 	{
         if (IsMultiplayerAuthority())
@@ -92,7 +70,6 @@ public partial class Character : CharacterBody2D
             }
 
             Velocity = NewVelocity;
-			Rpc(nameof(NotifyPeersPos), Position);
 
 			if (!bIsAttacking)
 			{
@@ -133,4 +110,42 @@ public partial class Character : CharacterBody2D
 			}
 		}		
     }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	private void Kill()
+	{
+		if (Multiplayer.IsServer())
+		{
+			Position = new Vector2(100, 100);
+		}else
+		{
+			Position = new Vector2(GetViewportRect().Size.X - 100, 100);
+		}
+	}
+
+	private void OnAnimFinished(StringName Anim)
+	{
+		if (Anim == "Attack")
+		{
+			bIsAttacking = false;
+		}
+	}
+
+	private void OnAnimationStarted(StringName Anim)
+	{
+		Rpc(nameof(NotifyPeersAnim), Anim);
+	}
+
+	[Rpc]
+	private void NotifyPeersAnim(StringName Anim)
+	{
+		AnimPlayer.Play(Anim);
+	}
+
+	[Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered, TransferChannel = 1)]
+	private void NotifyPeersPos(Vector2 NewPos)
+	{
+		CreateTween().TweenProperty(this, "position", NewPos, 0.05);
+	}
+
 }
