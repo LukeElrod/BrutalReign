@@ -4,8 +4,8 @@ using System;
 public partial class Main : Node2D
 {
 	[Export]
-	PackedScene CharacterScene;
-	MultiplayerSpawner Spawner;
+	private PackedScene CharacterScene;
+	private MultiplayerSpawner Spawner;
 	public override void _Ready()
 	{
 		Spawner = GetNode<MultiplayerSpawner>("MultiplayerSpawner");
