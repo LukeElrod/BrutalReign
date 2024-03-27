@@ -7,9 +7,12 @@ public partial class Character : CharacterBody2D
 	private Sprite2D CharSprite;
 	private RayCast2D AttackRay;
 	private bool bIsAttacking = false;
-	private const float SPEED = 200.0f;
-    private const float GRAVITY = 800.0f;
-    private const float JUMP_FORCE = 400.0f;
+	[Export]
+	private const float SPEED = 20000.0f;
+    [Export]
+	private const float GRAVITY = 800.0f;
+    [Export]
+	private const float JUMP_FORCE = 400.0f;
 	private double PositionUpdate = 0.0;
 
 	public override void _Ready()
@@ -62,7 +65,7 @@ public partial class Character : CharacterBody2D
             if (Input.IsActionPressed("MoveRight"))
                 InputVec.X += 1;
 
-            NewVelocity.X = InputVec.X * SPEED;
+            NewVelocity.X = InputVec.X * SPEED * (float)delta;
 
             if (IsOnFloor() && Input.IsActionJustPressed("Jump"))
             {

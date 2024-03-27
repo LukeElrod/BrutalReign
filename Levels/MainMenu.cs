@@ -27,6 +27,16 @@ public partial class MainMenu : Node2D
 
 	private void ClientButtonPressed()
 	{
+		//dev
+		if (IpTextEdit.Text == "")
+		{
+			var DevPeer = new ENetMultiplayerPeer();
+			DevPeer.CreateClient("127.0.0.1", 7777);
+			Multiplayer.MultiplayerPeer = DevPeer;
+
+			GD.Print("client");
+		}
+
 		var Peer = new ENetMultiplayerPeer();
 		Peer.CreateClient(IpTextEdit.Text, 7777);
 		Multiplayer.MultiplayerPeer = Peer;
