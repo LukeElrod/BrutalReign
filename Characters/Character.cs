@@ -14,6 +14,7 @@ public partial class Character : CharacterBody2D
     [Export]
 	private const float JUMP_FORCE = 400.0f;
 	private double PositionUpdate = 0.0;
+	private float Health = 100.0f;
 
 	public override void _Ready()
 	{
@@ -102,27 +103,36 @@ public partial class Character : CharacterBody2D
 		{
 			if (@event.IsAction("LightAttack"))
 			{
-				AnimPlayer.Play("Attack");
 				bIsAttacking = true;
+				AnimPlayer.Play("Attack");
 
 				if (AttackRay.IsColliding())
 				{
 					Character Victim = (Character)AttackRay.GetCollider();
-					Victim.Rpc(nameof(Kill));
+					Victim.Rpc(nameof(TakeDamage), 20);
 				}
 			}
 		}		
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void Kill()
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	private void TakeDamage(float DamageAmount)
 	{
-		if (Multiplayer.IsServer())
+		Health -= DamageAmount;
+
+		if (Health <= 0)
 		{
-			Position = new Vector2(100, 100);
-		}else
-		{
-			Position = new Vector2(GetViewportRect().Size.X - 100, 100);
+			// Character is killed
+			if (Multiplayer.IsServer())
+			{
+				Position = new Vector2(100, 100);
+			}
+			else
+			{
+				Position = new Vector2(GetViewportRect().Size.X - 100, 100);
+			}
+
+			Health = 100; // Reset health after being killed
 		}
 	}
 
