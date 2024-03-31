@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bnkr6seutblya"]
+[gd_scene load_steps=10 format=3 uid="uid://bnkr6seutblya"]
 
 [ext_resource type="Script" path="res://Levels/Main.cs" id="1_d78um"]
 [ext_resource type="PackedScene" uid="uid://s1nsqceocqrf" path="res://Characters/Character.tscn" id="2_a3w4t"]
@@ -17,6 +17,12 @@ shader_parameter/blur = 0.002
 shader_parameter/colour = Color(1, 1, 1, 1)
 shader_parameter/size = Vector2(0.005, 0.2)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ghxir"]
+size = Vector2(13.25, 58)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nbf3a"]
+size = Vector2(9.5, 16)
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_d78um")
 CharacterScene = ExtResource("2_a3w4t")
@@ -28,7 +34,7 @@ spawn_path = NodePath("../Characters")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 z_index = 1
-position = Vector2(310, 322)
+position = Vector2(310, 329)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("WorldBoundaryShape2D_mckcj")
@@ -45,3 +51,25 @@ offset_bottom = 321.0
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_qbp7j")
 autoplay = true
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+position = Vector2(7, 295)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(-0.5, 5)
+shape = SubResource("RectangleShape2D_ghxir")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(10.5, -16)
+shape = SubResource("RectangleShape2D_nbf3a")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+position = Vector2(634, 295)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(-0.375, 5)
+shape = SubResource("RectangleShape2D_ghxir")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(-11.25, -16)
+shape = SubResource("RectangleShape2D_nbf3a")
