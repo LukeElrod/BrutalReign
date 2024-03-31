@@ -34,7 +34,7 @@ spawn_path = NodePath("../Characters")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 z_index = 1
-position = Vector2(310, 329)
+position = Vector2(310, 331)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("WorldBoundaryShape2D_mckcj")
@@ -53,7 +53,7 @@ stream = ExtResource("5_qbp7j")
 autoplay = true
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
-position = Vector2(7, 295)
+position = Vector2(7, 297)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
 position = Vector2(-0.5, 5)
@@ -64,7 +64,7 @@ position = Vector2(10.5, -16)
 shape = SubResource("RectangleShape2D_nbf3a")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="."]
-position = Vector2(634, 295)
+position = Vector2(634, 297)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
 position = Vector2(-0.375, 5)
