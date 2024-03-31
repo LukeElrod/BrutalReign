@@ -20,6 +20,12 @@ config/icon="res://icon.svg"
 NetworkManager="*res://NetworkManager.cs"
 ClientGlobals="*res://ClientGlobals.cs"
 
+[display]
+
+window/size/viewport_width=2560
+window/size/viewport_height=1440
+window/stretch/scale=4.0
+
 [dotnet]
 
 project/assembly_name="Brutal Reign"

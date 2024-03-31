@@ -182,7 +182,7 @@ _data = {
 }
 
 [node name="Character" type="CharacterBody2D"]
-scale = Vector2(2, 2)
+z_index = 1
 script = ExtResource("1_h5r60")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

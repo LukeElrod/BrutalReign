@@ -7,11 +7,13 @@ public partial class MainMenu : Node2D
 	private Button ClientButton;
 	private Button ServerButton;
 	private Button StartButton;
+	private Button QuitButton;
 	private TextEdit IpTextEdit;
 
 	public override void _Ready()
 	{
 		IpTextEdit = GetNode<TextEdit>("TextEdit");
+		QuitButton = GetNode<Button>("QuitButton");
 		ClientButton = GetNode<Button>("ClientButton");
 		ServerButton = GetNode<Button>("ServerButton");
 		StartButton = GetNode<Button>("StartButton");
@@ -19,10 +21,17 @@ public partial class MainMenu : Node2D
 		ClientButton.Pressed += ClientButtonPressed;
 		ServerButton.Pressed += ServerButtonPressed;
 		StartButton.Pressed += StartButtonPressed;
+		QuitButton.Pressed += QuitButtonPressed;
+	}
+
+	private void QuitButtonPressed()
+	{
+		GetTree().Quit();
 	}
 
 	public override void _Process(double delta)
 	{
+		
 	}
 
 	private void ClientButtonPressed()
