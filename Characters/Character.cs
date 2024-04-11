@@ -8,7 +8,7 @@ public partial class Character : CharacterBody2D
 	private RayCast2D AttackRay;
 	private bool bIsAttacking = false;
 	[Export]
-	private const float SPEED = 20000.0f;
+	private const float SPEED = 200.0f;
     [Export]
 	private const float GRAVITY = 800.0f;
     [Export]
@@ -66,7 +66,7 @@ public partial class Character : CharacterBody2D
             if (Input.IsActionPressed("MoveRight"))
                 InputVec.X += 1;
 
-            NewVelocity.X = InputVec.X * SPEED * (float)delta;
+            NewVelocity.X = InputVec.X * SPEED;
 
             if (IsOnFloor() && Input.IsActionJustPressed("Jump"))
             {
@@ -92,7 +92,7 @@ public partial class Character : CharacterBody2D
 					AnimPlayer.Play("Idle");
 				}
 			}
-			
+
 			MoveAndSlide();
 		}
 	}
