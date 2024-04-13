@@ -1,10 +1,33 @@
-[gd_scene load_steps=8 format=3 uid="uid://cg1c0browvc0"]
+[gd_scene load_steps=19 format=3 uid="uid://cg1c0browvc0"]
 
 [ext_resource type="Script" path="res://Levels/MainMenu.cs" id="1_16vbe"]
 [ext_resource type="Texture2D" uid="uid://ccau5nr053ctu" path="res://RawAssets/Environment/main-menu-background.png" id="2_0q8sc"]
+[ext_resource type="Shader" path="res://Levels/cloud.gdshader" id="2_e3wf6"]
+[ext_resource type="Texture2D" uid="uid://de2sxenb4aci" path="res://RawAssets/Environment/background1.png" id="3_jyst1"]
 [ext_resource type="Shader" path="res://Levels/rain.gdshader" id="4_u34hx"]
+[ext_resource type="Texture2D" uid="uid://dmhy658osppqi" path="res://RawAssets/Environment/background2.png" id="4_wjqa8"]
 [ext_resource type="AudioStream" uid="uid://mellu5ewhiwu" path="res://RawAssets/Audio/Ambiance_Rain_Calm_Loop_Stereo.wav" id="5_7nyd3"]
+[ext_resource type="Texture2D" uid="uid://t0c2ym6mksie" path="res://RawAssets/Environment/background3.png" id="5_gmu3a"]
 [ext_resource type="FontFile" uid="uid://owdb1e8h1xym" path="res://RawAssets/Fonts/PixelifySans-VariableFont_wght.ttf" id="6_7gjo1"]
+[ext_resource type="Texture2D" uid="uid://bjn81s7t6frvv" path="res://RawAssets/Environment/background4.png" id="6_dernr"]
+[ext_resource type="Texture2D" uid="uid://d1in7301pb6ga" path="res://RawAssets/Environment/background5.png" id="7_0g221"]
+[ext_resource type="Texture2D" uid="uid://b132h21w0q8sd" path="res://RawAssets/Environment/background6.png" id="8_7q4ns"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i7n7l"]
+shader = ExtResource("2_e3wf6")
+shader_parameter/speed = -0.003
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mbvc3"]
+shader = ExtResource("2_e3wf6")
+shader_parameter/speed = -0.003
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c7uqb"]
+shader = ExtResource("2_e3wf6")
+shader_parameter/speed = -0.004
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tirt3"]
+shader = ExtResource("2_e3wf6")
+shader_parameter/speed = -0.005
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8hwu5"]
 shader = ExtResource("4_u34hx")
@@ -19,6 +42,42 @@ shader_parameter/size = Vector2(0.005, 0.2)
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_16vbe")
+
+[node name="Background1" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_i7n7l")
+texture = ExtResource("3_jyst1")
+centered = false
+
+[node name="Background2" type="Sprite2D" parent="."]
+texture = ExtResource("4_wjqa8")
+centered = false
+
+[node name="Background3" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_mbvc3")
+position = Vector2(0, 18)
+texture = ExtResource("5_gmu3a")
+centered = false
+
+[node name="Background4" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_c7uqb")
+position = Vector2(0, 18)
+texture = ExtResource("6_dernr")
+centered = false
+
+[node name="Background5" type="Sprite2D" parent="."]
+position = Vector2(0, 18)
+texture = ExtResource("7_0g221")
+centered = false
+
+[node name="Background6" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_tirt3")
+position = Vector2(0, 18)
+texture = ExtResource("8_7q4ns")
+centered = false
 
 [node name="Main-menu-background" type="Sprite2D" parent="."]
 texture = ExtResource("2_0q8sc")

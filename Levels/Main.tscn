@@ -1,23 +1,53 @@
-[gd_scene load_steps=12 format=3 uid="uid://bnkr6seutblya"]
+[gd_scene load_steps=24 format=3 uid="uid://bnkr6seutblya"]
 
 [ext_resource type="Script" path="res://Levels/Main.cs" id="1_d78um"]
 [ext_resource type="PackedScene" uid="uid://s1nsqceocqrf" path="res://Characters/Character.tscn" id="2_a3w4t"]
+[ext_resource type="Texture2D" uid="uid://bjn81s7t6frvv" path="res://RawAssets/Environment/background4.png" id="3_el2l7"]
+[ext_resource type="Texture2D" uid="uid://dmhy658osppqi" path="res://RawAssets/Environment/background2.png" id="4_tpjmd"]
 [ext_resource type="Shader" path="res://Levels/rain.gdshader" id="4_yqres"]
+[ext_resource type="Shader" path="res://Levels/cloud.gdshader" id="5_3fvak"]
+[ext_resource type="Texture2D" uid="uid://t0c2ym6mksie" path="res://RawAssets/Environment/background3.png" id="5_321gm"]
 [ext_resource type="AudioStream" uid="uid://mellu5ewhiwu" path="res://RawAssets/Audio/Ambiance_Rain_Calm_Loop_Stereo.wav" id="5_qbp7j"]
-[ext_resource type="Texture2D" uid="uid://dxp7ot2k0hyqp" path="res://RawAssets/Environment/background-2.png" id="5_vhdb2"]
-[ext_resource type="Texture2D" uid="uid://bhqln7o1phnnq" path="res://RawAssets/Environment/background-3.png" id="6_bxlbg"]
-[ext_resource type="Texture2D" uid="uid://btal3pm8fet1r" path="res://RawAssets/Environment/background.png" id="7_6b808"]
+[ext_resource type="Texture2D" uid="uid://de2sxenb4aci" path="res://RawAssets/Environment/background1.png" id="6_w6jst"]
+[ext_resource type="Texture2D" uid="uid://d1in7301pb6ga" path="res://RawAssets/Environment/background5.png" id="7_l6ivm"]
+[ext_resource type="Texture2D" uid="uid://b132h21w0q8sd" path="res://RawAssets/Environment/background6.png" id="8_6oxmm"]
+[ext_resource type="Texture2D" uid="uid://pwytdw5cn123" path="res://RawAssets/Environment/background7.png" id="10_c7mir"]
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_mckcj"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_puaqd"]
+shader = ExtResource("5_3fvak")
+shader_parameter/speed = -0.003
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q1ack"]
+shader = ExtResource("5_3fvak")
+shader_parameter/speed = -0.003
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tesg8"]
+shader = ExtResource("5_3fvak")
+shader_parameter/speed = -0.004
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s6mnk"]
+shader = ExtResource("5_3fvak")
+shader_parameter/speed = -0.005
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rmytm"]
 shader = ExtResource("4_yqres")
 shader_parameter/count = 150
 shader_parameter/slant = -0.01
-shader_parameter/speed = 50.0
+shader_parameter/speed = 40.0
 shader_parameter/blur = 0.002
 shader_parameter/colour = Color(1, 1, 1, 1)
 shader_parameter/size = Vector2(0.005, 0.2)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_mckcj"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_hfist"]
+normal = Vector2(0, 1)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gl1tv"]
+normal = Vector2(1, 0)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_scrdl"]
+normal = Vector2(-1, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ghxir"]
 size = Vector2(13.25, 58)
@@ -31,27 +61,47 @@ CharacterScene = ExtResource("2_a3w4t")
 
 [node name="Characters" type="Node2D" parent="."]
 
-[node name="Background-2" type="Sprite2D" parent="."]
-texture = ExtResource("5_vhdb2")
-centered = false
-
-[node name="Background-3" type="Sprite2D" parent="."]
-texture = ExtResource("6_bxlbg")
-centered = false
-
-[node name="Background" type="Sprite2D" parent="."]
-texture = ExtResource("7_6b808")
-centered = false
-
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("../Characters")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-z_index = 1
-position = Vector2(310, 331)
+[node name="Background1" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_puaqd")
+texture = ExtResource("6_w6jst")
+centered = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource("WorldBoundaryShape2D_mckcj")
+[node name="Background2" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("4_tpjmd")
+centered = false
+
+[node name="Background3" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_q1ack")
+texture = ExtResource("5_321gm")
+centered = false
+
+[node name="Background4" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_tesg8")
+texture = ExtResource("3_el2l7")
+centered = false
+
+[node name="Background5" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("7_l6ivm")
+centered = false
+
+[node name="Background6" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_s6mnk")
+texture = ExtResource("8_6oxmm")
+centered = false
+
+[node name="Background7" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("10_c7mir")
+centered = false
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_rmytm")
@@ -61,6 +111,25 @@ offset_bottom = 321.0
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_qbp7j")
 autoplay = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = 1
+position = Vector2(310, 331)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_mckcj")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(10, -331)
+shape = SubResource("WorldBoundaryShape2D_hfist")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-310, -203)
+shape = SubResource("WorldBoundaryShape2D_gl1tv")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(330, -177)
+shape = SubResource("WorldBoundaryShape2D_scrdl")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
 position = Vector2(7, 297)

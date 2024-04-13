@@ -18,9 +18,30 @@ public partial class Character : CharacterBody2D
 
 	public override void _Ready()
 	{
-		AnimPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 		CharSprite = GetNode<Sprite2D>("Sprite2D");
 		AttackRay = GetNode<RayCast2D>("RayCast2D");
+		
+		if (Multiplayer.IsServer())
+		{
+			if (IsMultiplayerAuthority())
+			{
+				AnimPlayer = GetNode<AnimationPlayer>("YellowAnimationPlayer");
+			}else
+			{
+				AnimPlayer = GetNode<AnimationPlayer>("GreenAnimationPlayer");
+			}
+		}else
+		{
+			if (IsMultiplayerAuthority())
+			{
+				AnimPlayer = GetNode<AnimationPlayer>("GreenAnimationPlayer");
+			}else
+			{
+				AnimPlayer = GetNode<AnimationPlayer>("YellowAnimationPlayer");
+			}
+		}
+
+
 		if (IsMultiplayerAuthority())
 		{
 			if (Multiplayer.IsServer())

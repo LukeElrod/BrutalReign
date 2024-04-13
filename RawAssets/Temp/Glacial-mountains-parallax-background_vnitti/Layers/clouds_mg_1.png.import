@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnvab8n62k465"
-path="res://.godot/imported/player-idle.png-44a33da79a3a635004ec93cc4ee8c3d3.ctex"
+uid="uid://di1qwq6vh2es1"
+path="res://.godot/imported/clouds_mg_1.png-646eb2ad4af411948f4db524967b949b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RawAssets/Characters/player-idle.png"
-dest_files=["res://.godot/imported/player-idle.png-44a33da79a3a635004ec93cc4ee8c3d3.ctex"]
+source_file="res://RawAssets/Temp/Glacial-mountains-parallax-background_vnitti/Layers/clouds_mg_1.png"
+dest_files=["res://.godot/imported/clouds_mg_1.png-646eb2ad4af411948f4db524967b949b.ctex"]
 
 [params]
 

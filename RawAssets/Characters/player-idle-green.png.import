@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btal3pm8fet1r"
-path="res://.godot/imported/background.png-dde9a880f1e6ede1e143100fc77b2f5b.ctex"
+uid="uid://bfoi8kn74tjtc"
+path="res://.godot/imported/player-idle-green.png-ea203a862af7501046e90282eee308d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RawAssets/Environment/background.png"
-dest_files=["res://.godot/imported/background.png-dde9a880f1e6ede1e143100fc77b2f5b.ctex"]
+source_file="res://RawAssets/Characters/player-idle-green.png"
+dest_files=["res://.godot/imported/player-idle-green.png-ea203a862af7501046e90282eee308d4.ctex"]
 
 [params]
 
