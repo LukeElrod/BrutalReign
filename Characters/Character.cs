@@ -7,6 +7,7 @@ public partial class Character : CharacterBody2D
 	private Sprite2D CharSprite;
 	private RayCast2D AttackRay;
 	private bool bIsAttacking = false;
+	private bool bIsJumping = false;
 	[Export]
 	private const float SPEED = 200.0f;
     [Export]
@@ -96,24 +97,7 @@ public partial class Character : CharacterBody2D
 
             Velocity = NewVelocity;
 
-			if (!bIsAttacking)
-			{
-				if (Velocity.X > 0)
-				{
-					AnimPlayer.Play("Run");
-					CharSprite.FlipH = false;
-					AttackRay.TargetPosition = new Vector2(43, 0);
-				}else if (Velocity.X < 0)
-				{
-					AnimPlayer.Play("Run");
-					CharSprite.FlipH = true;
-					AttackRay.TargetPosition = new Vector2(-43, 0);
-				}else
-				{
-					AnimPlayer.Play("Idle");
-				}
-			}
-
+			ProcessAnimation();
 			MoveAndSlide();
 		}
 	}
@@ -135,6 +119,41 @@ public partial class Character : CharacterBody2D
 			}
 		}		
     }
+
+	private void ProcessAnimation()
+	{
+		if (IsOnFloor())
+		{
+			bIsJumping = false;
+		}
+
+		if (!bIsAttacking && !bIsJumping)
+		{
+			if (Mathf.Abs(Velocity.X) > 0)
+			{
+				AnimPlayer.Play("Run");
+			}else
+			{
+				AnimPlayer.Play("Idle");
+			}
+
+			if (Velocity.X > 0)
+			{
+				CharSprite.FlipH = false;
+				AttackRay.TargetPosition = new Vector2(43, 0);
+			}else if (Velocity.X < 0)
+			{
+				CharSprite.FlipH = true;
+				AttackRay.TargetPosition = new Vector2(-43, 0);
+			}
+		
+			if (!IsOnFloor() && !bIsJumping)
+			{
+				AnimPlayer.Play("Jump");
+				bIsJumping = true;
+			}
+		}
+	}
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
 	private void TakeDamage(float DamageAmount)
