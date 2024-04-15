@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bnkr6seutblya"]
+[gd_scene load_steps=25 format=3 uid="uid://bnkr6seutblya"]
 
 [ext_resource type="Script" path="res://Levels/Main.cs" id="1_d78um"]
 [ext_resource type="PackedScene" uid="uid://s1nsqceocqrf" path="res://Characters/Character.tscn" id="2_a3w4t"]
@@ -12,6 +12,9 @@
 [ext_resource type="Texture2D" uid="uid://d1in7301pb6ga" path="res://RawAssets/Environment/background5.png" id="7_l6ivm"]
 [ext_resource type="Texture2D" uid="uid://b132h21w0q8sd" path="res://RawAssets/Environment/background6.png" id="8_6oxmm"]
 [ext_resource type="Texture2D" uid="uid://pwytdw5cn123" path="res://RawAssets/Environment/background7.png" id="10_c7mir"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_r8cvs"]
+polygon = PackedVector2Array(630, 28, -10, 29, -10, -58, 12, -58, 12, -42, 2, -42, 2, 0, 617, 0, 617, -42, 608, -42, 608, -58, 630, -58)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_puaqd"]
 shader = ExtResource("5_3fvak")
@@ -63,6 +66,10 @@ CharacterScene = ExtResource("2_a3w4t")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("../Characters")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(10, 331)
+occluder = SubResource("OccluderPolygon2D_r8cvs")
 
 [node name="Background1" type="Sprite2D" parent="."]
 texture_repeat = 2

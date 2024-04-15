@@ -1,11 +1,19 @@
 using Godot;
 using System;
 
+struct AttackPacket
+{
+	float Damage;
+	bool bFromRight;
+}
+
 public partial class Character : CharacterBody2D
 {
 	private AnimationPlayer AnimPlayer;
+	private Timer AttackCD;
 	private Sprite2D CharSprite;
 	private RayCast2D AttackRay;
+	private GpuParticles2D BloodParticles;
 	private bool bIsAttacking = false;
 	private bool bIsJumping = false;
 	[Export]
@@ -19,8 +27,10 @@ public partial class Character : CharacterBody2D
 
 	public override void _Ready()
 	{
+		AttackCD = GetNode<Timer>("AttackCD");
 		CharSprite = GetNode<Sprite2D>("Sprite2D");
 		AttackRay = GetNode<RayCast2D>("RayCast2D");
+		BloodParticles = GetNode<GpuParticles2D>("BloodParticles");
 		
 		if (Multiplayer.IsServer())
 		{
@@ -106,8 +116,9 @@ public partial class Character : CharacterBody2D
     {
 		if (IsMultiplayerAuthority())
 		{
-			if (@event.IsAction("LightAttack"))
+			if (@event.IsAction("LightAttack") && AttackCD.IsStopped())
 			{
+				AttackCD.Start();
 				bIsAttacking = true;
 				AnimPlayer.Play("Attack");
 
@@ -163,6 +174,7 @@ public partial class Character : CharacterBody2D
 	private void TakeDamage(float DamageAmount)
 	{
 		Health -= DamageAmount;
+		BloodParticles.Restart();
 
 		if (Health <= 0)
 		{

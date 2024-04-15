@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://s1nsqceocqrf"]
+[gd_scene load_steps=25 format=3 uid="uid://s1nsqceocqrf"]
 
 [ext_resource type="Script" path="res://Characters/Character.cs" id="1_h5r60"]
 [ext_resource type="Texture2D" uid="uid://bfoi8kn74tjtc" path="res://RawAssets/Characters/player-idle-green.png" id="2_d8hdw"]
@@ -13,6 +13,21 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_oytjp"]
 radius = 7.0
 height = 32.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sg1rv"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1, 15.65, 1)
+initial_velocity_max = 404.17
+gravity = Vector3(0, 98, 0)
+scale_min = 1.5
+scale_max = 2.5
+color = Color(1, 0.254902, 0.2, 1)
+hue_variation_min = -0.05
+hue_variation_max = 0.05
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g0lsr"]
 properties/0/path = NodePath("Sprite2D:flip_h")
@@ -449,6 +464,13 @@ shape = SubResource("CapsuleShape2D_oytjp")
 texture = ExtResource("2_d8hdw")
 hframes = 10
 
+[node name="BloodParticles" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_sg1rv")
+one_shot = true
+explosiveness = 1.0
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_g0lsr")
 
@@ -465,3 +487,6 @@ hit_from_inside = true
 libraries = {
 "": SubResource("AnimationLibrary_l1dov")
 }
+
+[node name="AttackCD" type="Timer" parent="."]
+one_shot = true
