@@ -122,11 +122,13 @@ public partial class Character : CharacterBody2D
 
 	private void ProcessAnimation()
 	{
+		//STATE MACHINE
 		if (IsOnFloor())
 		{
 			bIsJumping = false;
 		}
 
+		//locomotion
 		if (!bIsAttacking && !bIsJumping)
 		{
 			if (Mathf.Abs(Velocity.X) > 0)
@@ -137,21 +139,23 @@ public partial class Character : CharacterBody2D
 				AnimPlayer.Play("Idle");
 			}
 
-			if (Velocity.X > 0)
-			{
-				CharSprite.FlipH = false;
-				AttackRay.TargetPosition = new Vector2(43, 0);
-			}else if (Velocity.X < 0)
-			{
-				CharSprite.FlipH = true;
-				AttackRay.TargetPosition = new Vector2(-43, 0);
-			}
 		
 			if (!IsOnFloor() && !bIsJumping)
 			{
 				AnimPlayer.Play("Jump");
 				bIsJumping = true;
 			}
+		}
+		
+		//sprite flipping
+		if (Velocity.X > 0)
+		{
+			CharSprite.FlipH = false;
+			AttackRay.TargetPosition = new Vector2(43, 0);
+		}else if (Velocity.X < 0)
+		{
+			CharSprite.FlipH = true;
+			AttackRay.TargetPosition = new Vector2(-43, 0);
 		}
 	}
 
@@ -181,6 +185,11 @@ public partial class Character : CharacterBody2D
 		if (Anim == "Attack")
 		{
 			bIsAttacking = false;
+
+			if (bIsJumping)
+			{
+				AnimPlayer.Play("Jump");
+			}
 		}
 	}
 
