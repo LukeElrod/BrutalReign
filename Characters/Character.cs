@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 struct AttackPacket
 {
@@ -11,10 +10,16 @@ public partial class Character : CharacterBody2D
 {
 	private AnimationPlayer AnimPlayer;
 	private Timer AttackCD;
+	private Timer RagdollCD;
 	private Sprite2D CharSprite;
 	private RayCast2D AttackRay;
 	private GpuParticles2D BloodParticles;
+	[Export]
+	private PackedScene RagdollScene;
+	private RigidBody2D Ragdoll;
+	private CollisionShape2D Collision;
 	private bool bIsAttacking = false;
+	private bool bIsRagdolled = false;
 	private bool bIsJumping = false;
 	[Export]
 	private const float SPEED = 200.0f;
@@ -27,11 +32,15 @@ public partial class Character : CharacterBody2D
 
 	public override void _Ready()
 	{
+		Collision = GetNode<CollisionShape2D>("CollisionShape2D");
+		RagdollCD = GetNode<Timer>("RagdollCD");
 		AttackCD = GetNode<Timer>("AttackCD");
 		CharSprite = GetNode<Sprite2D>("Sprite2D");
 		AttackRay = GetNode<RayCast2D>("RayCast2D");
 		BloodParticles = GetNode<GpuParticles2D>("BloodParticles");
-		
+
+		RagdollCD.Timeout += ExitRagdoll;
+
 		if (Multiplayer.IsServer())
 		{
 			if (IsMultiplayerAuthority())
@@ -73,6 +82,9 @@ public partial class Character : CharacterBody2D
 
     public override void _Process(double delta)
     {
+		if (bIsRagdolled)
+			return;
+		
         if (IsMultiplayerAuthority())
 		{
 			//sync pos every 0.05 seconds
@@ -86,9 +98,16 @@ public partial class Character : CharacterBody2D
     }
 	public override void _PhysicsProcess(double delta)
 	{
+		if (bIsRagdolled)
+		{
+			Position = Ragdoll.Position;
+			return;
+		}
+
         if (IsMultiplayerAuthority())
         {
-            Vector2 NewVelocity = Velocity;
+            
+			Vector2 NewVelocity = Velocity;
 
             NewVelocity.Y += GRAVITY * (float)delta;
 
@@ -114,6 +133,9 @@ public partial class Character : CharacterBody2D
 
     public override void _Input(InputEvent @event)
     {
+		if (bIsRagdolled)
+			return;
+		
 		if (IsMultiplayerAuthority())
 		{
 			if (@event.IsAction("LightAttack") && AttackCD.IsStopped())
@@ -130,6 +152,38 @@ public partial class Character : CharacterBody2D
 			}
 		}		
     }
+
+	private void EnterRagdoll(Vector2 Impulse)
+	{
+		Collision.Disabled = true;
+		Ragdoll = RagdollScene.Instantiate<RigidBody2D>();
+		GetParent().AddChild(Ragdoll);
+		Ragdoll.Position = Position;
+		Ragdoll.ApplyImpulse(Impulse);
+		bIsRagdolled = true;
+		RagdollCD.Start();
+		AnimPlayer.Play("Dead");
+	}
+
+	private void ExitRagdoll()
+	{
+		Collision.Disabled = false;
+		bIsRagdolled = false;
+		Ragdoll.QueueFree();
+
+		//respawn
+		if (IsMultiplayerAuthority())
+		{
+			if (Multiplayer.IsServer())
+			{
+				Position = new Vector2(100, 100);
+			}
+			else
+			{
+				Position = new Vector2(GetViewportRect().Size.X - 100, 100);
+			}
+		}
+	}
 
 	private void ProcessAnimation()
 	{
@@ -178,18 +232,16 @@ public partial class Character : CharacterBody2D
 
 		if (Health <= 0)
 		{
-			// Character is killed
-			if (Multiplayer.IsServer())
+			//killed
+			EnterRagdoll(new Vector2(GD.RandRange(-200, 200), -500));
+			if (Multiplayer.GetUniqueId() != Multiplayer.GetRemoteSenderId())
 			{
-				Position = new Vector2(100, 100);
+				ClientGlobals.Instance.ShakeCamera(1f, .5f);
 			}
-			else
-			{
-				Position = new Vector2(GetViewportRect().Size.X - 100, 100);
-			}
-
-			Health = 100; // Reset health after being killed
+			
+			Health = 100;
 		}
+
 	}
 
 	private void OnAnimFinished(StringName Anim)

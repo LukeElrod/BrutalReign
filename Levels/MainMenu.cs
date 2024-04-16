@@ -44,6 +44,7 @@ public partial class MainMenu : Node2D
 			Multiplayer.MultiplayerPeer = DevPeer;
 
 			GD.Print("client");
+			return;
 		}
 
 		var Peer = new ENetMultiplayerPeer();

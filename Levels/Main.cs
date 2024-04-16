@@ -18,6 +18,7 @@ public partial class Main : Node2D
 				Spawner.Spawn(id);
 			}
 		}
+		ClientGlobals.Instance.ActiveCamera = GetNode<Camera2D>("Camera2D");
 	}
 
 	Node CharacterSpawnFunc(Variant Data)

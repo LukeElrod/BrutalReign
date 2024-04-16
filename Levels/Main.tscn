@@ -122,6 +122,8 @@ autoplay = true
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 z_index = 1
 position = Vector2(310, 331)
+collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("WorldBoundaryShape2D_mckcj")
@@ -140,6 +142,8 @@ shape = SubResource("WorldBoundaryShape2D_scrdl")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
 position = Vector2(7, 297)
+collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
 position = Vector2(-0.5, 5)
@@ -151,6 +155,8 @@ shape = SubResource("RectangleShape2D_nbf3a")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="."]
 position = Vector2(634, 297)
+collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
 position = Vector2(-0.375, 5)
@@ -159,3 +165,6 @@ shape = SubResource("RectangleShape2D_ghxir")
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D3"]
 position = Vector2(-11.25, -16)
 shape = SubResource("RectangleShape2D_nbf3a")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
