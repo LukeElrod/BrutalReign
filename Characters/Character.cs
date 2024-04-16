@@ -2,8 +2,8 @@ using Godot;
 
 struct AttackPacket
 {
-	float Damage;
-	bool bFromRight;
+	public float Damage;
+	public bool bFromRight;
 }
 
 public partial class Character : CharacterBody2D
@@ -11,6 +11,8 @@ public partial class Character : CharacterBody2D
 	private AnimationPlayer AnimPlayer;
 	private Timer AttackCD;
 	private Timer RagdollCD;
+	private AudioStreamPlayer SwingPlayer;
+	private AudioStreamPlayer ImpactPlayer;
 	private Sprite2D CharSprite;
 	private RayCast2D AttackRay;
 	private GpuParticles2D BloodParticles;
@@ -32,6 +34,8 @@ public partial class Character : CharacterBody2D
 
 	public override void _Ready()
 	{
+		SwingPlayer = GetNode<AudioStreamPlayer>("SwingPlayer");
+		ImpactPlayer = GetNode<AudioStreamPlayer>("ImpactPlayer");
 		Collision = GetNode<CollisionShape2D>("CollisionShape2D");
 		RagdollCD = GetNode<Timer>("RagdollCD");
 		AttackCD = GetNode<Timer>("AttackCD");
@@ -147,7 +151,11 @@ public partial class Character : CharacterBody2D
 				if (AttackRay.IsColliding())
 				{
 					Character Victim = (Character)AttackRay.GetCollider();
-					Victim.Rpc(nameof(TakeDamage), 20);
+					Victim.Rpc(nameof(TakeDamage), 25);
+					Rpc(nameof(NotifyAudio), "LightAttack");
+				}else
+				{
+					Rpc(nameof(NotifyAudio), "Miss");
 				}
 			}
 		}		
@@ -234,14 +242,10 @@ public partial class Character : CharacterBody2D
 		{
 			//killed
 			EnterRagdoll(new Vector2(GD.RandRange(-200, 200), -500));
-			if (Multiplayer.GetUniqueId() != Multiplayer.GetRemoteSenderId())
-			{
-				ClientGlobals.Instance.ShakeCamera(1f, .5f);
-			}
+			ClientGlobals.Instance.ShakeCamera(1f, .5f);
 			
 			Health = 100;
 		}
-
 	}
 
 	private void OnAnimFinished(StringName Anim)
@@ -266,6 +270,20 @@ public partial class Character : CharacterBody2D
 	private void NotifyPeersAnim(StringName Anim)
 	{
 		AnimPlayer.Play(Anim);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	private void NotifyAudio(StringName Sound)
+	{
+		switch (Sound)
+		{
+			case "LightAttack":
+				ImpactPlayer.Play();
+				break;
+			case "Miss":
+				SwingPlayer.Play();
+				break;
+		}
 	}
 
 	[Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.UnreliableOrdered, TransferChannel = 1)]

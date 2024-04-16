@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://s1nsqceocqrf"]
+[gd_scene load_steps=38 format=3 uid="uid://s1nsqceocqrf"]
 
 [ext_resource type="Script" path="res://Characters/Character.cs" id="1_h5r60"]
 [ext_resource type="Texture2D" uid="uid://bfoi8kn74tjtc" path="res://RawAssets/Characters/player-idle-green.png" id="2_d8hdw"]
@@ -12,6 +12,12 @@
 [ext_resource type="Texture2D" uid="uid://dh4gg32173skf" path="res://RawAssets/Characters/player-attack-green.png" id="7_owjlo"]
 [ext_resource type="Texture2D" uid="uid://db4lqtae5ox0c" path="res://RawAssets/Characters/player-jump-green.png" id="7_sl7s0"]
 [ext_resource type="Texture2D" uid="uid://b84172my31xxl" path="res://RawAssets/Characters/player-dead-green.png" id="11_7jm34"]
+[ext_resource type="AudioStream" uid="uid://cfmjm7nojgdoi" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Attack 1.wav" id="13_wyiv0"]
+[ext_resource type="AudioStream" uid="uid://cpxlkb13ihpfy" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Attack 2.wav" id="14_hsaje"]
+[ext_resource type="AudioStream" uid="uid://7pauafi6tkuh" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Attack 3.wav" id="15_oxjjp"]
+[ext_resource type="AudioStream" uid="uid://cld10b6dqeyvx" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 1.wav" id="16_t4nkg"]
+[ext_resource type="AudioStream" uid="uid://dy51c2ydv65du" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 2.wav" id="17_0xmnb"]
+[ext_resource type="AudioStream" uid="uid://cvx2vmjw00536" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 3.wav" id="18_qt713"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_oytjp"]
 radius = 7.0
@@ -75,6 +81,45 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_gfm64"]
+resource_name = "Dead"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("7_4ujh0")]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_kta2q"]
@@ -237,45 +282,6 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
-[sub_resource type="Animation" id="Animation_gfm64"]
-resource_name = "Dead"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:hframes")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:texture")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("7_4ujh0")]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tin8a"]
 _data = {
 "Attack": SubResource("Animation_hikdu"),
@@ -324,6 +330,45 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [2]
+}
+
+[sub_resource type="Animation" id="Animation_jctd4"]
+resource_name = "Dead"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:texture")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("11_7jm34")]
 }
 
 [sub_resource type="Animation" id="Animation_vumqg"]
@@ -486,45 +531,6 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
-[sub_resource type="Animation" id="Animation_jctd4"]
-resource_name = "Dead"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:texture")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("11_7jm34")]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l1dov"]
 _data = {
 "Attack": SubResource("Animation_j6s27"),
@@ -534,6 +540,26 @@ _data = {
 "RESET": SubResource("Animation_7811d"),
 "Run": SubResource("Animation_43qo6")
 }
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_go060"]
+playback_mode = 1
+streams_count = 3
+stream_0/stream = ExtResource("13_wyiv0")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("14_hsaje")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("15_oxjjp")
+stream_2/weight = 1.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_l2nk5"]
+playback_mode = 1
+streams_count = 3
+stream_0/stream = ExtResource("16_t4nkg")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("17_0xmnb")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("18_qt713")
+stream_2/weight = 1.0
 
 [node name="Character" type="CharacterBody2D"]
 z_index = 1
@@ -579,3 +605,11 @@ one_shot = true
 [node name="RagdollCD" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
+
+[node name="SwingPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_go060")
+volume_db = 4.0
+
+[node name="ImpactPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_l2nk5")
+volume_db = 4.0
