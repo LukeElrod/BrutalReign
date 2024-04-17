@@ -9,15 +9,18 @@ public partial class MainMenu : Node2D
 	private Button StartButton;
 	private Button QuitButton;
 	private TextEdit IpTextEdit;
+	private Label WaitingLabel;
 
 	public override void _Ready()
 	{
+		WaitingLabel = GetNode<Label>("WaitingLabel");
 		IpTextEdit = GetNode<TextEdit>("TextEdit");
 		QuitButton = GetNode<Button>("QuitButton");
 		ClientButton = GetNode<Button>("ClientButton");
 		ServerButton = GetNode<Button>("ServerButton");
 		StartButton = GetNode<Button>("StartButton");
 
+		Multiplayer.ConnectedToServer += OnClientConnectedToServer;
 		ClientButton.Pressed += ClientButtonPressed;
 		ServerButton.Pressed += ServerButtonPressed;
 		StartButton.Pressed += StartButtonPressed;
@@ -50,6 +53,7 @@ public partial class MainMenu : Node2D
 		var Peer = new ENetMultiplayerPeer();
 		Peer.CreateClient(IpTextEdit.Text, 7777);
 		Multiplayer.MultiplayerPeer = Peer;
+		
 
 		GD.Print("client");
 	}
@@ -61,6 +65,15 @@ public partial class MainMenu : Node2D
 		Multiplayer.MultiplayerPeer = Peer;
 
 		GD.Print("server");
+	}
+
+	private void OnClientConnectedToServer()
+	{
+		StartButton.Visible = false;
+		ClientButton.Visible = false;
+		ServerButton.Visible = false;
+		IpTextEdit.Visible = false;
+		WaitingLabel.Visible = true;
 	}
 
 	private void StartButtonPressed()
