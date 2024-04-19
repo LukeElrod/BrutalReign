@@ -10,9 +10,13 @@ public partial class MainMenu : Node2D
 	private Button QuitButton;
 	private TextEdit IpTextEdit;
 	private Label WaitingLabel;
+	private Label ServerWaitingLabel;
+	private int ConnectedPlayers = 0;
+
 
 	public override void _Ready()
 	{
+		ServerWaitingLabel = GetNode<Label>("ServerWaitingLabel");
 		WaitingLabel = GetNode<Label>("WaitingLabel");
 		IpTextEdit = GetNode<TextEdit>("TextEdit");
 		QuitButton = GetNode<Button>("QuitButton");
@@ -20,21 +24,18 @@ public partial class MainMenu : Node2D
 		ServerButton = GetNode<Button>("ServerButton");
 		StartButton = GetNode<Button>("StartButton");
 
-		Multiplayer.ConnectedToServer += OnClientConnectedToServer;
 		ClientButton.Pressed += ClientButtonPressed;
 		ServerButton.Pressed += ServerButtonPressed;
 		StartButton.Pressed += StartButtonPressed;
 		QuitButton.Pressed += QuitButtonPressed;
+
+		Multiplayer.ConnectedToServer += OnConnectedToServer;
+		Multiplayer.PeerConnected += OnPeerConnected;
 	}
 
 	private void QuitButtonPressed()
 	{
 		GetTree().Quit();
-	}
-
-	public override void _Process(double delta)
-	{
-		
 	}
 
 	private void ClientButtonPressed()
@@ -45,17 +46,12 @@ public partial class MainMenu : Node2D
 			var DevPeer = new ENetMultiplayerPeer();
 			DevPeer.CreateClient("127.0.0.1", 7777);
 			Multiplayer.MultiplayerPeer = DevPeer;
-
-			GD.Print("client");
 			return;
 		}
 
 		var Peer = new ENetMultiplayerPeer();
 		Peer.CreateClient(IpTextEdit.Text, 7777);
 		Multiplayer.MultiplayerPeer = Peer;
-		
-
-		GD.Print("client");
 	}
 
 	private void ServerButtonPressed()
@@ -64,10 +60,13 @@ public partial class MainMenu : Node2D
 		Peer.CreateServer(7777);
 		Multiplayer.MultiplayerPeer = Peer;
 
-		GD.Print("server");
+		ClientButton.Visible = false;
+		ServerButton.Visible = false;
+		IpTextEdit.Visible = false;
+		ServerWaitingLabel.Visible = true;
 	}
 
-	private void OnClientConnectedToServer()
+	private void OnConnectedToServer()
 	{
 		StartButton.Visible = false;
 		ClientButton.Visible = false;
@@ -75,6 +74,12 @@ public partial class MainMenu : Node2D
 		IpTextEdit.Visible = false;
 		WaitingLabel.Visible = true;
 	}
+
+	private void OnPeerConnected(long id)
+    {
+        ConnectedPlayers++;
+        ServerWaitingLabel.Text = $"Waiting for players...\n{ConnectedPlayers} connected";
+    }
 
 	private void StartButtonPressed()
 	{

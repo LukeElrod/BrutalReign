@@ -151,5 +151,17 @@ offset_bottom = 230.0
 size_flags_horizontal = 0
 theme_override_fonts/font = ExtResource("6_7gjo1")
 theme_override_font_sizes/font_size = 36
-text = "Waiting For Host..."
+text = "Waiting for host..."
+horizontal_alignment = 1
+
+[node name="ServerWaitingLabel" type="Label" parent="."]
+visible = false
+offset_left = 140.0
+offset_top = 212.0
+offset_right = 499.0
+offset_bottom = 257.0
+size_flags_horizontal = 0
+theme_override_fonts/font = ExtResource("6_7gjo1")
+theme_override_font_sizes/font_size = 24
+text = "Waiting for players..."
 horizontal_alignment = 1
