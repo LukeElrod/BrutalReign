@@ -8,6 +8,15 @@ struct AttackPacket
 
 public partial class Character : CharacterBody2D
 {
+	[Export]
+	private const float SPEED = 200.0f;
+    [Export]
+	private const float GRAVITY = 800.0f;
+    [Export]
+	private const float JUMP_FORCE = 400.0f;
+	[Export]
+	private PackedScene RagdollScene;
+
 	private AnimationPlayer AnimPlayer;
 	private Timer AttackCD;
 	private Timer RagdollCD;
@@ -16,19 +25,13 @@ public partial class Character : CharacterBody2D
 	private Sprite2D CharSprite;
 	private RayCast2D AttackRay;
 	private GpuParticles2D BloodParticles;
-	[Export]
-	private PackedScene RagdollScene;
 	private RigidBody2D Ragdoll;
 	private CollisionShape2D Collision;
+	private Vector2 InputVec = Vector2.Zero;
+	private bool bIsBlocking = false;
 	private bool bIsAttacking = false;
 	private bool bIsRagdolled = false;
 	private bool bIsJumping = false;
-	[Export]
-	private const float SPEED = 200.0f;
-    [Export]
-	private const float GRAVITY = 800.0f;
-    [Export]
-	private const float JUMP_FORCE = 400.0f;
 	private double PositionUpdate = 0.0;
 	private float Health = 100.0f;
 
@@ -108,27 +111,19 @@ public partial class Character : CharacterBody2D
 			return;
 		}
 
-        if (IsMultiplayerAuthority())
-        {
-            
+		if (IsMultiplayerAuthority())
+		{
 			Vector2 NewVelocity = Velocity;
 
-            NewVelocity.Y += GRAVITY * (float)delta;
+			NewVelocity.Y += GRAVITY * (float)delta;
+			NewVelocity.X = InputVec.X * SPEED;
 
-            Vector2 InputVec = Vector2.Zero;
-            if (Input.IsActionPressed("MoveLeft"))
-                InputVec.X -= 1;
-            if (Input.IsActionPressed("MoveRight"))
-                InputVec.X += 1;
+			if (IsOnFloor() && InputVec.Y < 0)
+			{
+				NewVelocity.Y = -JUMP_FORCE;
+			}
 
-            NewVelocity.X = InputVec.X * SPEED;
-
-            if (IsOnFloor() && Input.IsActionJustPressed("Jump"))
-            {
-                NewVelocity.Y = -JUMP_FORCE;
-            }
-
-            Velocity = NewVelocity;
+			Velocity = NewVelocity;
 
 			ProcessAnimation();
 			MoveAndSlide();
@@ -139,26 +134,50 @@ public partial class Character : CharacterBody2D
     {
 		if (bIsRagdolled)
 			return;
-		
+
 		if (IsMultiplayerAuthority())
 		{
-			if (@event.IsAction("LightAttack") && AttackCD.IsStopped())
+			if (@event.IsActionPressed("Block"))
 			{
-				AttackCD.Start();
-				bIsAttacking = true;
-				AnimPlayer.Play("Attack");
-
-				if (AttackRay.IsColliding())
-				{
-					Character Victim = (Character)AttackRay.GetCollider();
-					Victim.Rpc(nameof(TakeDamage), 25);
-					Rpc(nameof(NotifyAudio), "LightAttack");
-				}else
-				{
-					Rpc(nameof(NotifyAudio), "Miss");
-				}
+				bIsBlocking = true;
+				InputVec = Vector2.Zero;
+				AnimPlayer.Play("Block");
+				return;
 			}
-		}		
+			else if (@event.IsActionReleased("Block"))
+			{
+				bIsBlocking = false;
+			}
+
+			if (!bIsBlocking)
+			{
+				if (@event.IsAction("LightAttack") && AttackCD.IsStopped())
+				{
+					AttackCD.Start();
+					bIsAttacking = true;
+					AnimPlayer.Play("Attack");
+
+					if (AttackRay.IsColliding())
+					{
+						Character Victim = (Character)AttackRay.GetCollider();
+						Victim.Rpc(nameof(TakeDamage), 25);
+						Rpc(nameof(NotifyAudio), "LightAttack");
+					}
+					else
+					{
+						Rpc(nameof(NotifyAudio), "Miss");
+					}
+				}
+
+				InputVec = Vector2.Zero;
+				if (Input.IsActionPressed("MoveLeft"))
+					InputVec.X -= 1;
+				if (Input.IsActionPressed("MoveRight"))
+					InputVec.X += 1;
+				if (Input.IsActionPressed("Jump"))
+					InputVec.Y -= 1;
+			}
+		}
     }
 
 	private void EnterRagdoll(Vector2 Impulse)
@@ -202,7 +221,7 @@ public partial class Character : CharacterBody2D
 		}
 
 		//locomotion
-		if (!bIsAttacking && !bIsJumping)
+		if (!bIsAttacking && !bIsJumping && !bIsBlocking)
 		{
 			if (Mathf.Abs(Velocity.X) > 0)
 			{
