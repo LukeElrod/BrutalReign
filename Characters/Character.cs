@@ -14,20 +14,22 @@ public partial class Character : CharacterBody2D
 	private const float GRAVITY = 800.0f;
     [Export]
 	private const float JUMP_FORCE = 400.0f;
-	[Export]
 	private PackedScene RagdollScene;
 
 	private AnimationPlayer AnimPlayer;
-	private Timer AttackCD;
+	private Timer SwordAttackCD;
 	private Timer RagdollCD;
-	private AudioStreamPlayer SwingPlayer;
-	private AudioStreamPlayer ImpactPlayer;
+	private AudioStreamPlayer SwordSwingPlayer;
+	private AudioStreamPlayer SwordHitPlayer;
+	private AudioStreamPlayer SwordBlockPlayer;
 	private Sprite2D CharSprite;
 	private RayCast2D AttackRay;
 	private GpuParticles2D BloodParticles;
 	private RigidBody2D Ragdoll;
 	private CollisionShape2D Collision;
 	private Vector2 InputVec = Vector2.Zero;
+	//exported for multiplayer sync
+	[Export]
 	private bool bIsBlocking = false;
 	private bool bIsAttacking = false;
 	private bool bIsRagdolled = false;
@@ -37,14 +39,16 @@ public partial class Character : CharacterBody2D
 
 	public override void _Ready()
 	{
-		SwingPlayer = GetNode<AudioStreamPlayer>("SwingPlayer");
-		ImpactPlayer = GetNode<AudioStreamPlayer>("ImpactPlayer");
-		Collision = GetNode<CollisionShape2D>("CollisionShape2D");
-		RagdollCD = GetNode<Timer>("RagdollCD");
-		AttackCD = GetNode<Timer>("AttackCD");
-		CharSprite = GetNode<Sprite2D>("Sprite2D");
-		AttackRay = GetNode<RayCast2D>("RayCast2D");
-		BloodParticles = GetNode<GpuParticles2D>("BloodParticles");
+		RagdollScene = GD.Load<PackedScene>("res://Characters/Ragdoll.tscn");
+		SwordBlockPlayer = GetNode<AudioStreamPlayer>(nameof(SwordBlockPlayer));
+		SwordSwingPlayer = GetNode<AudioStreamPlayer>(nameof(SwordSwingPlayer));
+		SwordHitPlayer = GetNode<AudioStreamPlayer>(nameof(SwordHitPlayer));
+		Collision = GetNode<CollisionShape2D>(nameof(Collision));
+		RagdollCD = GetNode<Timer>(nameof(RagdollCD));
+		SwordAttackCD = GetNode<Timer>(nameof(SwordAttackCD));
+		CharSprite = GetNode<Sprite2D>(nameof(CharSprite));
+		AttackRay = GetNode<RayCast2D>(nameof(AttackRay));
+		BloodParticles = GetNode<GpuParticles2D>(nameof(BloodParticles));
 
 		RagdollCD.Timeout += ExitRagdoll;
 
@@ -94,7 +98,7 @@ public partial class Character : CharacterBody2D
 		
         if (IsMultiplayerAuthority())
 		{
-			//sync pos every 0.05 seconds
+			//sync pos 20 times a second
 			PositionUpdate += delta;
 			if (PositionUpdate >= 0.05)
 			{
@@ -147,21 +151,29 @@ public partial class Character : CharacterBody2D
 			else if (@event.IsActionReleased("Block"))
 			{
 				bIsBlocking = false;
+				if (bIsJumping)
+					AnimPlayer.Play("Jump");
 			}
 
 			if (!bIsBlocking)
 			{
-				if (@event.IsAction("LightAttack") && AttackCD.IsStopped())
+				if (@event.IsAction("LightAttack") && SwordAttackCD.IsStopped())
 				{
-					AttackCD.Start();
+					SwordAttackCD.Start();
 					bIsAttacking = true;
 					AnimPlayer.Play("Attack");
 
 					if (AttackRay.IsColliding())
 					{
 						Character Victim = (Character)AttackRay.GetCollider();
-						Victim.Rpc(nameof(TakeDamage), 25);
-						Rpc(nameof(NotifyAudio), "LightAttack");
+						if (Victim.bIsBlocking)
+						{
+							Rpc(nameof(NotifyAudio), "Block");
+						}else
+						{
+							Victim.Rpc(nameof(TakeDamage), 25);
+							Rpc(nameof(NotifyAudio), "LightAttack");
+						}
 					}
 					else
 					{
@@ -231,7 +243,6 @@ public partial class Character : CharacterBody2D
 				AnimPlayer.Play("Idle");
 			}
 
-		
 			if (!IsOnFloor() && !bIsJumping)
 			{
 				AnimPlayer.Play("Jump");
@@ -269,14 +280,13 @@ public partial class Character : CharacterBody2D
 
 	private void OnAnimFinished(StringName Anim)
 	{
-		if (Anim == "Attack")
+		switch (Anim)
 		{
-			bIsAttacking = false;
-
-			if (bIsJumping)
-			{
-				AnimPlayer.Play("Jump");
-			}
+			case "Attack":
+				bIsAttacking = false;
+				if (bIsJumping)
+					AnimPlayer.Play("Jump");
+				break;
 		}
 	}
 
@@ -297,10 +307,13 @@ public partial class Character : CharacterBody2D
 		switch (Sound)
 		{
 			case "LightAttack":
-				ImpactPlayer.Play();
+				SwordHitPlayer.Play();
+				break;
+			case "Block":
+				SwordBlockPlayer.Play();
 				break;
 			case "Miss":
-				SwingPlayer.Play();
+				SwordSwingPlayer.Play();
 				break;
 		}
 	}

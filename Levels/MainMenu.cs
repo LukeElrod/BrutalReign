@@ -16,13 +16,13 @@ public partial class MainMenu : Node2D
 
 	public override void _Ready()
 	{
-		ServerWaitingLabel = GetNode<Label>("ServerWaitingLabel");
-		WaitingLabel = GetNode<Label>("WaitingLabel");
-		IpTextEdit = GetNode<TextEdit>("TextEdit");
-		QuitButton = GetNode<Button>("QuitButton");
-		ClientButton = GetNode<Button>("ClientButton");
-		ServerButton = GetNode<Button>("ServerButton");
-		StartButton = GetNode<Button>("StartButton");
+		ServerWaitingLabel = GetNode<Label>(nameof(ServerWaitingLabel));
+		WaitingLabel = GetNode<Label>(nameof(WaitingLabel));
+		IpTextEdit = GetNode<TextEdit>(nameof(IpTextEdit));
+		QuitButton = GetNode<Button>(nameof(QuitButton));
+		ClientButton = GetNode<Button>(nameof(ClientButton));
+		ServerButton = GetNode<Button>(nameof(ServerButton));
+		StartButton = GetNode<Button>(nameof(StartButton));
 
 		ClientButton.Pressed += ClientButtonPressed;
 		ServerButton.Pressed += ServerButtonPressed;

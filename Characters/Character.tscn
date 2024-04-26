@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://s1nsqceocqrf"]
+[gd_scene load_steps=45 format=3 uid="uid://s1nsqceocqrf"]
 
 [ext_resource type="Script" path="res://Characters/Character.cs" id="1_h5r60"]
 [ext_resource type="Texture2D" uid="uid://bfoi8kn74tjtc" path="res://RawAssets/Characters/player-idle-green.png" id="2_d8hdw"]
@@ -19,6 +19,9 @@
 [ext_resource type="AudioStream" uid="uid://cld10b6dqeyvx" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 1.wav" id="16_t4nkg"]
 [ext_resource type="AudioStream" uid="uid://dy51c2ydv65du" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 2.wav" id="17_0xmnb"]
 [ext_resource type="AudioStream" uid="uid://cvx2vmjw00536" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 3.wav" id="18_qt713"]
+[ext_resource type="AudioStream" uid="uid://b667yvgim43o1" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Parry 1.wav" id="20_vnvm6"]
+[ext_resource type="AudioStream" uid="uid://c0tldnmlnnstu" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Parry 2.wav" id="21_d4sd1"]
+[ext_resource type="AudioStream" uid="uid://fmp6syaelwx4" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Parry 3.wav" id="22_qu0ta"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_oytjp"]
 radius = 7.0
@@ -40,9 +43,12 @@ collision_friction = 0.0
 collision_bounce = 0.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g0lsr"]
-properties/0/path = NodePath("Sprite2D:flip_h")
+properties/0/path = NodePath("CharSprite:flip_h")
 properties/0/spawn = true
 properties/0/replication_mode = 2
+properties/1/path = NodePath(".:bIsBlocking")
+properties/1/spawn = true
+properties/1/replication_mode = 2
 
 [sub_resource type="Animation" id="Animation_hikdu"]
 resource_name = "Attack"
@@ -50,7 +56,7 @@ length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -62,7 +68,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/path = NodePath("CharSprite:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -74,7 +80,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -84,12 +90,52 @@ tracks/2/keys = {
 "values": [0, 1]
 }
 
+[sub_resource type="Animation" id="Animation_dseq5"]
+resource_name = "Block"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("8_afb1g")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CharSprite:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CharSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
 [sub_resource type="Animation" id="Animation_gfm64"]
 resource_name = "Dead"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:hframes")
+tracks/0/path = NodePath("CharSprite:hframes")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -101,7 +147,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:texture")
+tracks/1/path = NodePath("CharSprite:texture")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -113,7 +159,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -129,7 +175,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:hframes")
+tracks/0/path = NodePath("CharSprite:hframes")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -141,7 +187,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/path = NodePath("CharSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -153,7 +199,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:texture")
+tracks/2/path = NodePath("CharSprite:texture")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -169,7 +215,7 @@ length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:hframes")
+tracks/0/path = NodePath("CharSprite:hframes")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -181,7 +227,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:texture")
+tracks/1/path = NodePath("CharSprite:texture")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -193,7 +239,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -208,7 +254,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:hframes")
+tracks/0/path = NodePath("CharSprite:hframes")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -220,7 +266,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:texture")
+tracks/1/path = NodePath("CharSprite:texture")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -232,7 +278,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -249,7 +295,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -261,7 +307,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/path = NodePath("CharSprite:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -273,7 +319,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -281,45 +327,6 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
-}
-
-[sub_resource type="Animation" id="Animation_dseq5"]
-resource_name = "Block"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("8_afb1g")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tin8a"]
@@ -339,7 +346,7 @@ length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -351,7 +358,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/path = NodePath("CharSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -363,7 +370,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:hframes")
+tracks/2/path = NodePath("CharSprite:hframes")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -373,24 +380,25 @@ tracks/2/keys = {
 "values": [2]
 }
 
-[sub_resource type="Animation" id="Animation_jctd4"]
-resource_name = "Dead"
+[sub_resource type="Animation" id="Animation_rfyiq"]
+resource_name = "Block"
+length = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0]
+"values": [ExtResource("13_tool3")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/path = NodePath("CharSprite:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -402,7 +410,46 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:texture")
+tracks/2/path = NodePath("CharSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_jctd4"]
+resource_name = "Dead"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CharSprite:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CharSprite:texture")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -418,7 +465,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -430,7 +477,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/path = NodePath("CharSprite:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -442,7 +489,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -458,7 +505,7 @@ length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -470,7 +517,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/path = NodePath("CharSprite:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -482,7 +529,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -497,7 +544,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -509,7 +556,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/path = NodePath("CharSprite:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -521,7 +568,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -538,7 +585,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/path = NodePath("CharSprite:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -550,7 +597,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/path = NodePath("CharSprite:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -562,7 +609,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/path = NodePath("CharSprite:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -570,45 +617,6 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
-}
-
-[sub_resource type="Animation" id="Animation_rfyiq"]
-resource_name = "Block"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("13_tool3")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_l1dov"]
@@ -642,16 +650,26 @@ stream_1/weight = 1.0
 stream_2/stream = ExtResource("18_qt713")
 stream_2/weight = 1.0
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_a2rdq"]
+playback_mode = 1
+streams_count = 3
+stream_0/stream = ExtResource("20_vnvm6")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("21_d4sd1")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("22_qu0ta")
+stream_2/weight = 1.0
+
 [node name="Character" type="CharacterBody2D"]
 z_index = 1
 collision_mask = 5
 script = ExtResource("1_h5r60")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_oytjp")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="CharSprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_d8hdw")
 hframes = 10
 
@@ -670,7 +688,7 @@ libraries = {
 "": SubResource("AnimationLibrary_tin8a")
 }
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="AttackRay" type="RayCast2D" parent="."]
 target_position = Vector2(43, 0)
 hit_from_inside = true
 
@@ -679,17 +697,21 @@ libraries = {
 "": SubResource("AnimationLibrary_l1dov")
 }
 
-[node name="AttackCD" type="Timer" parent="."]
+[node name="SwordAttackCD" type="Timer" parent="."]
 one_shot = true
 
 [node name="RagdollCD" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
 
-[node name="SwingPlayer" type="AudioStreamPlayer" parent="."]
+[node name="SwordSwingPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_go060")
-volume_db = 4.0
+volume_db = 3.0
 
-[node name="ImpactPlayer" type="AudioStreamPlayer" parent="."]
+[node name="SwordHitPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_l2nk5")
-volume_db = 4.0
+volume_db = 3.0
+
+[node name="SwordBlockPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_a2rdq")
+volume_db = 3.0

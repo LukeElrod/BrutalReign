@@ -8,7 +8,7 @@ public partial class Main : Node2D
 	private MultiplayerSpawner Spawner;
 	public override void _Ready()
 	{
-		Spawner = GetNode<MultiplayerSpawner>("MultiplayerSpawner");
+		Spawner = GetNode<MultiplayerSpawner>(nameof(Spawner));
 		Spawner.SpawnFunction = Callable.From<Variant, Node>(CharacterSpawnFunc);
 		if (Multiplayer.IsServer())
 		{

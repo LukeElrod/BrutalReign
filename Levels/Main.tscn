@@ -64,7 +64,7 @@ CharacterScene = ExtResource("2_a3w4t")
 
 [node name="Characters" type="Node2D" parent="."]
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="Spawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("../Characters")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]

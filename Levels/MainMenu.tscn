@@ -132,7 +132,7 @@ theme_override_font_sizes/font_size = 11
 text = "Quit"
 flat = true
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="IpTextEdit" type="TextEdit" parent="."]
 offset_left = 350.0
 offset_top = 218.0
 offset_right = 452.0
