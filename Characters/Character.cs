@@ -54,37 +54,18 @@ public partial class Character : CharacterBody2D
 
 		if (Multiplayer.IsServer())
 		{
-			if (IsMultiplayerAuthority())
-			{
-				AnimPlayer = GetNode<AnimationPlayer>("YellowAnimationPlayer");
-			}else
-			{
-				AnimPlayer = GetNode<AnimationPlayer>("GreenAnimationPlayer");
-			}
-		}else
+			AnimPlayer = IsMultiplayerAuthority() ? GetNode<AnimationPlayer>("YellowAnimationPlayer") : GetNode<AnimationPlayer>("GreenAnimationPlayer");
+		}
+		else
 		{
-			if (IsMultiplayerAuthority())
-			{
-				AnimPlayer = GetNode<AnimationPlayer>("GreenAnimationPlayer");
-			}else
-			{
-				AnimPlayer = GetNode<AnimationPlayer>("YellowAnimationPlayer");
-			}
+			AnimPlayer = IsMultiplayerAuthority() ? GetNode<AnimationPlayer>("GreenAnimationPlayer") : GetNode<AnimationPlayer>("YellowAnimationPlayer");
 		}
 
 
 		if (IsMultiplayerAuthority())
 		{
-			if (Multiplayer.IsServer())
-			{
-				// Host spawns on the left side
-				Position = new Vector2(100, 100);
-			}
-			else
-			{
-				// Visitor spawns on the right side
-				Position = new Vector2(GetViewportRect().Size.X - 100, 100);
-			}
+
+			Position = Multiplayer.IsServer() ? Position = new Vector2(100, 100) : Position = new Vector2(GetViewportRect().Size.X - 100, 100);
 
 			AnimPlayer.AnimationStarted += OnAnimationStarted;
 			AnimPlayer.AnimationFinished += OnAnimFinished;
@@ -93,18 +74,15 @@ public partial class Character : CharacterBody2D
 
     public override void _Process(double delta)
     {
-		if (bIsRagdolled)
+		if (bIsRagdolled || !IsMultiplayerAuthority())
 			return;
 		
-        if (IsMultiplayerAuthority())
+		//sync pos 20 times a second
+		PositionUpdate += delta;
+		if (PositionUpdate >= 0.05)
 		{
-			//sync pos 20 times a second
-			PositionUpdate += delta;
-			if (PositionUpdate >= 0.05)
-			{
-				Rpc(nameof(NotifyPeersPos), Position);
-				PositionUpdate = 0.0;
-			}
+			Rpc(nameof(NotifyPeersPos), Position);
+			PositionUpdate = 0.0;
 		}
     }
 	public override void _PhysicsProcess(double delta)
@@ -114,81 +92,77 @@ public partial class Character : CharacterBody2D
 			Position = Ragdoll.Position;
 			return;
 		}
+		if (!IsMultiplayerAuthority())
+			return;
 
-		if (IsMultiplayerAuthority())
+		Vector2 NewVelocity = Velocity;
+
+		NewVelocity.Y += GRAVITY * (float)delta;
+		NewVelocity.X = InputVec.X * SPEED;
+
+		if (IsOnFloor() && InputVec.Y < 0)
 		{
-			Vector2 NewVelocity = Velocity;
-
-			NewVelocity.Y += GRAVITY * (float)delta;
-			NewVelocity.X = InputVec.X * SPEED;
-
-			if (IsOnFloor() && InputVec.Y < 0)
-			{
-				NewVelocity.Y = -JUMP_FORCE;
-			}
-
-			Velocity = NewVelocity;
-
-			ProcessAnimation();
-			MoveAndSlide();
+			NewVelocity.Y = -JUMP_FORCE;
 		}
+
+		Velocity = NewVelocity;
+
+		ProcessAnimation();
+		MoveAndSlide();
 	}
 
     public override void _Input(InputEvent @event)
     {
-		if (bIsRagdolled)
+		if (bIsRagdolled || !IsMultiplayerAuthority())
 			return;
 
-		if (IsMultiplayerAuthority())
+		if (@event.IsActionPressed("Block"))
 		{
-			if (@event.IsActionPressed("Block"))
-			{
-				bIsBlocking = true;
-				InputVec = Vector2.Zero;
-				AnimPlayer.Play("Block");
-				return;
-			}
-			else if (@event.IsActionReleased("Block"))
-			{
-				bIsBlocking = false;
-				if (bIsJumping)
-					AnimPlayer.Play("Jump");
-			}
+			bIsBlocking = true;
+			InputVec = Vector2.Zero;
+			AnimPlayer.Play("Block");
+			return;
+		}
+		else if (@event.IsActionReleased("Block"))
+		{
+			bIsBlocking = false;
+			if (bIsJumping)
+				AnimPlayer.Play("Jump");
+		}
 
-			if (!bIsBlocking)
+		if (!bIsBlocking)
+		{
+			if (@event.IsAction("LightAttack") && SwordAttackCD.IsStopped())
 			{
-				if (@event.IsAction("LightAttack") && SwordAttackCD.IsStopped())
+				SwordAttackCD.Start();
+				bIsAttacking = true;
+				AnimPlayer.Play("Attack");
+
+				if (AttackRay.IsColliding())
 				{
-					SwordAttackCD.Start();
-					bIsAttacking = true;
-					AnimPlayer.Play("Attack");
-
-					if (AttackRay.IsColliding())
+					Character Victim = (Character)AttackRay.GetCollider();
+					if (Victim.bIsBlocking)
 					{
-						Character Victim = (Character)AttackRay.GetCollider();
-						if (Victim.bIsBlocking)
-						{
-							Rpc(nameof(NotifyAudio), "Block");
-						}else
-						{
-							Victim.Rpc(nameof(TakeDamage), 25);
-							Rpc(nameof(NotifyAudio), "LightAttack");
-						}
-					}
-					else
+						Rpc(nameof(NotifyAudio), "Block");
+					}else
 					{
-						Rpc(nameof(NotifyAudio), "Miss");
+						Victim.Rpc(nameof(TakeDamage), 25);
+						Rpc(nameof(NotifyAudio), "LightAttack");
 					}
 				}
-
-				InputVec = Vector2.Zero;
-				if (Input.IsActionPressed("MoveLeft"))
-					InputVec.X -= 1;
-				if (Input.IsActionPressed("MoveRight"))
-					InputVec.X += 1;
-				if (Input.IsActionPressed("Jump"))
-					InputVec.Y -= 1;
+				else
+				{
+					Rpc(nameof(NotifyAudio), "Miss");
+				}
 			}
+
+			InputVec = Vector2.Zero;
+			if (Input.IsActionPressed("MoveLeft"))
+				InputVec.X -= 1;
+			if (Input.IsActionPressed("MoveRight"))
+				InputVec.X += 1;
+			if (Input.IsActionPressed("Jump"))
+				InputVec.Y -= 1;
 		}
     }
 
@@ -213,14 +187,7 @@ public partial class Character : CharacterBody2D
 		//respawn
 		if (IsMultiplayerAuthority())
 		{
-			if (Multiplayer.IsServer())
-			{
-				Position = new Vector2(100, 100);
-			}
-			else
-			{
-				Position = new Vector2(GetViewportRect().Size.X - 100, 100);
-			}
+			Position = Multiplayer.IsServer() ? Position = new Vector2(100, 100) : Position = new Vector2(GetViewportRect().Size.X - 100, 100);
 		}
 	}
 

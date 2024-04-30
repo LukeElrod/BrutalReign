@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://s1nsqceocqrf"]
+[gd_scene load_steps=49 format=3 uid="uid://s1nsqceocqrf"]
 
 [ext_resource type="Script" path="res://Characters/Character.cs" id="1_h5r60"]
 [ext_resource type="Texture2D" uid="uid://bfoi8kn74tjtc" path="res://RawAssets/Characters/player-idle-green.png" id="2_d8hdw"]
@@ -11,11 +11,13 @@
 [ext_resource type="Texture2D" uid="uid://dh4gg32173skf" path="res://RawAssets/Characters/player-attack-green.png" id="7_owjlo"]
 [ext_resource type="Texture2D" uid="uid://db4lqtae5ox0c" path="res://RawAssets/Characters/player-jump-green.png" id="7_sl7s0"]
 [ext_resource type="Texture2D" uid="uid://1vsbm6jm81ic" path="res://RawAssets/Characters/player-block-yellow.png" id="8_afb1g"]
+[ext_resource type="Texture2D" uid="uid://wa6xcyy1165x" path="res://RawAssets/Characters/player-parry-yellow.png" id="9_hjbi5"]
 [ext_resource type="Texture2D" uid="uid://b84172my31xxl" path="res://RawAssets/Characters/player-dead-green.png" id="11_7jm34"]
 [ext_resource type="Texture2D" uid="uid://chqguot4h68r8" path="res://RawAssets/Characters/player-block-green.png" id="13_tool3"]
 [ext_resource type="AudioStream" uid="uid://cfmjm7nojgdoi" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Attack 1.wav" id="13_wyiv0"]
 [ext_resource type="AudioStream" uid="uid://cpxlkb13ihpfy" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Attack 2.wav" id="14_hsaje"]
 [ext_resource type="AudioStream" uid="uid://7pauafi6tkuh" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Attack 3.wav" id="15_oxjjp"]
+[ext_resource type="Texture2D" uid="uid://w2omjuq57w40" path="res://RawAssets/Characters/player-parry-green.png" id="15_p6or3"]
 [ext_resource type="AudioStream" uid="uid://cld10b6dqeyvx" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 1.wav" id="16_t4nkg"]
 [ext_resource type="AudioStream" uid="uid://dy51c2ydv65du" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 2.wav" id="17_0xmnb"]
 [ext_resource type="AudioStream" uid="uid://cvx2vmjw00536" path="res://RawAssets/Audio/Sword Attacks Hits and Blocks/Sword Impact Hit 3.wav" id="18_qt713"]
@@ -249,6 +251,46 @@ tracks/2/keys = {
 "values": [0, 1, 2]
 }
 
+[sub_resource type="Animation" id="Animation_ubtrp"]
+resource_name = "Parry"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("9_hjbi5")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CharSprite:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CharSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
 [sub_resource type="Animation" id="Animation_pmlhk"]
 length = 0.001
 tracks/0/type = "value"
@@ -336,6 +378,7 @@ _data = {
 "Dead": SubResource("Animation_gfm64"),
 "Idle": SubResource("Animation_kta2q"),
 "Jump": SubResource("Animation_41gs1"),
+"Parry": SubResource("Animation_ubtrp"),
 "RESET": SubResource("Animation_pmlhk"),
 "Run": SubResource("Animation_aprfl")
 }
@@ -539,6 +582,46 @@ tracks/2/keys = {
 "values": [0, 1, 2]
 }
 
+[sub_resource type="Animation" id="Animation_j5jn1"]
+resource_name = "Parry"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CharSprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CharSprite:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("15_p6or3")]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CharSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
 [sub_resource type="Animation" id="Animation_7811d"]
 length = 0.001
 tracks/0/type = "value"
@@ -626,6 +709,7 @@ _data = {
 "Dead": SubResource("Animation_jctd4"),
 "Idle": SubResource("Animation_vumqg"),
 "Jump": SubResource("Animation_lgga8"),
+"Parry": SubResource("Animation_j5jn1"),
 "RESET": SubResource("Animation_7811d"),
 "Run": SubResource("Animation_43qo6")
 }
